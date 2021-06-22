@@ -8,7 +8,7 @@ router.post('/login' , (req, res) => {
     const usuario = req.body.usuario
     const senha = req.body.senha
 
-    console.log(usuario,senha)
+    console.log('Chegou no login: ',usuario,senha)
 
     conexao.query('select * from usuario where email=?',[usuario], (err,result) => {
         if (!err){
@@ -22,17 +22,16 @@ router.post('/login' , (req, res) => {
                         },'82nb7934y23n904yb327',{
                             expiresIn:"2d"
                         })
-                        return res.status(200).send({
-                            mensagem: 'Autenticado com sucesso.',
-                            token: token})
+                        req.session.user = result
+                        res.json({auth: true, token: token, result:result})
                     } else {
-                        //console.log('Senha errada')
-                        return res.status(401).send({mensagem: 'Usuário não encontrado.'})
+                        console.log('Senha errada')
+                        res.status(401).send({mensagem: 'Usuário não encontrado.'})
                     }
                 })
             } else {
-                //console.log('Não encontrou')
-                return res.status(401).send({mensagem: 'Usuário não encontrado.'})
+                console.log('Não encontrou')
+                res.json({auth: false, mensagem:'Erro na autenticação.'})
             }
         } else {
             console.log('Deu erro na conexão ao realizar login!' ,err)

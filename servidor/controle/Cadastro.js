@@ -21,18 +21,18 @@ router.post('/cadastro' , (req,res) => {
 
     bcrypt.hash(senha, saltRounds, function(err,hash){
         conexao.query('insert into usuario (nome,sobrenome,senha,email,cpf) values (?,?,?,?,?)',
-        [nome,sobrenome,hash,email,cpf] , 
+        [nome,sobrenome,hash,email,cpf], 
         function (error, result, fields){
             if (!error){
                 const codigo = verificaEmail(email)
                 console.log(codigo)
                 if(verificaEmail(email) != 0){
-                  //  cadastra(verificaEmail(email),'Principal',endereco,numero,complemento,cep)
+                     cadastra(verificaEmail(email),'Principal',endereco,numero,complemento,cep)
                 } else {
-                    //NÃO ENCONTROU EMAIL
+                    console.log('caiu else')
                 }
             } else {
-                //DEU ERRO
+                console.log('caiu dois else abaixo')
             }
         }) 
     })
